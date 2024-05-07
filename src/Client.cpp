@@ -33,23 +33,13 @@ Client::~Client()
     }
 }
 
-sock_t Client::getFd( void ) const
-{
-    return (this->_fd);
-}
+sock_t Client::getFd(void) const {return (this->_fd);}
 
-sock_t Client::getServerFd( void ) const
-{
-    return (this->serverFd);
-}
+sock_t Client::getServerFd(void) const {return (this->serverFd);}
 
-std::string Client::getServerPort( void ) const {
-    return (_defaultSrv.getPort());
-};
+std::string Client::getServerPort( void ) const {return (_defaultSrv.getPort());}
 
-const std::string &Client::getTmpToChild() const {
-   return(_tmpFiles[0]); 
-}
+const std::string &Client::getTmpToChild() const {return(_tmpFiles[0]);}
 
 // std::ofstream ofs("_requestBuf.log");
 
@@ -103,7 +93,6 @@ void Client::multipart(void)
 
 bool Client::readChunkedRequest() {
     char *ptr;
-    // std::cout << "readChunkedRequest\n";
     size_t pos = _requestBuf.find("\r\n");
     while ((pos != std::string::npos)
         || (_isChunkStarted == true && _requestBuf.empty() == false)) {
@@ -142,7 +131,6 @@ bool Client::readChunkedRequest() {
 int Client::receiveRequest() {
     char buf[READ_BUFFER];
     int rdSize = recv(_fd, buf, sizeof(buf), 0);
-    // std::cout << "rdSize = " << rdSize << std::endl;
     if (rdSize == 0 || rdSize == -1) {
         return (-1);
     }
@@ -308,31 +296,19 @@ int Client::sendResponse() {
 }
 
 const HTTPServer &Client::getSrv( void ) const {
-    if (_subSrv) {
-        return (*_subSrv);
-    }
-    return (_defaultSrv);
-};
+    return (_subSrv ? (*_subSrv) : _defaultSrv);
+}
 
-HTTPServer &Client::getDefaultSrv( void ) {
-    return (_defaultSrv);
-};
+HTTPServer &Client::getDefaultSrv( void ) {return (_defaultSrv);}
 
 HTTPServer &Client::getSrv( void ) {
-    if (_subSrv) {
-        return (*_subSrv);
-    }
-    return (_defaultSrv);
-};
+    return ( _subSrv ? (*_subSrv) : _defaultSrv);
+}
 
-
-void Client::setCgiStartTime() {
-    _cgiStartTime = time(NULL);
-};
+void Client::setCgiStartTime() {_cgiStartTime = time(NULL);}
 
 bool Client::checkCgi() {
     if (_cgiPID != -1) {
-        // std::cout << ":checkCgi\n";
         int status;
         int waitRet;
         waitRet = waitpid(_cgiPID, &status, WNOHANG);
@@ -367,44 +343,35 @@ bool Client::checkCgi() {
         }
     }
     return (true);
-};
+}
 
+void Client::setCgiPipeFd(int fd) {_cgiPipeFd = fd;}
 
-void Client::setCgiPipeFd(int fd) {
-    _cgiPipeFd = fd;
-};
+void Client::setCgiPID(int pid) {_cgiPID = pid;}
 
-void Client::setCgiPID(int pid) {
-    _cgiPID = pid;
-};
-
-const ServerCore &Client::getCurrentLoc() const {
-    if (_location) {
-        // std::cout << "_location = " << _location->getLocation() << std::endl;;
+const ServerCore &Client::getCurrentLoc() const
+{
+    if (_location)
         return (*_location);
-    }
-    if (_subSrv) {
-        // std::cout << "_subSrv\n";
+    if (_subSrv)
         return (*_subSrv);
-    }
-        // std::cout << "_defaultSrv\n";
     return (_defaultSrv);
-};
+}
 
 
-InnerFd *Client:: getInnerFd(int fd) {
+InnerFd *Client:: getInnerFd(int fd)
+{
     std::map<int, InnerFd *  >::iterator it = _innerFds.find(fd);
-    if (it != _innerFds.end()) {
+    if (it != _innerFds.end())
         return(it->second);
-    }
     return (NULL);
-};
+}
 
-void Client::addInnerFd(InnerFd *obj) {
-    if (obj) {
+void Client::addInnerFd(InnerFd *obj)
+{
+    if (obj)
         _innerFds.insert(std::pair<int, InnerFd *>(obj->_fd, obj));
-    }
-};
+}
 
 void Client::removeInnerFd(int fd) {
     std::map<int, InnerFd *>::iterator it = _innerFds.find(fd);
@@ -414,7 +381,7 @@ void Client::removeInnerFd(int fd) {
         EvManager::delEvent(fd, EvManager::read);
         EvManager::delEvent(fd, EvManager::write);
     }
-};
+}
 
 std::string Client::getUser(std::string const &pwd) const
 {
@@ -428,15 +395,15 @@ std::string Client::getUser(std::string const &pwd) const
     return (user);
 }
 
-void Client::setSocketAddress(struct sockaddr_in *addr)
-{
-    this->clientInfo = *addr;
-}
+void Client::setSocketAddress(struct sockaddr_in *addr) {this->clientInfo = *addr;}
 
-const struct sockaddr_in* Client::getSocketAddress( void ) const
-{
-    return (&this->clientInfo);
-}
+const struct sockaddr_in* Client::getSocketAddress( void ) const {return (&this->clientInfo);}
+
+
+typedef union {
+    char ip[4];
+
+} ipcast;
 
 char* Client::inet_ntoa(struct in_addr clAddr) const //erevi saya
 {

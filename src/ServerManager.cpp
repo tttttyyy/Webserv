@@ -122,10 +122,13 @@ void ServerManager::start() {
             if (client == NULL) {
                 continue ;
             }
-            if (event.first == EvManager::eof) {
+            if (event.first == EvManager::eof)
+            {
                 closeConnetcion(*client);
                 continue ;
-            } else if (client->isRequestReady() == false && event.first == EvManager::read) {
+            }
+            else if (client->isRequestReady() == false && event.first == EvManager::read)
+            {
                 if (client->getHttpRequest().empty()) {
                     EvManager::addEvent(client->getFd(), EvManager::write, EvManager::client);
                 }
@@ -141,14 +144,17 @@ void ServerManager::start() {
                     client->setStartStatus(true);
                     generateResponse(*client);
                 }
-            } else if ((client->isRequestReady() == true || client->isErrorResponse() == true)
+            }
+            else if ((client->isRequestReady() == true || client->isErrorResponse() == true)
                     && client->isResponseReady() && event.first == EvManager::write) {
                 int res = client->sendResponse();
-                if (res == -1 || client->findInMap("Connection") == "close") {
+                if (res == -1 || client->findInMap("Connection") == "close")
+                {
                     ofsLog << "response sent" << std::endl;
                     closeConnetcion(*client);
                     continue ;
-                } else if (res == true) {
+                }
+                else if (res == true) {
                     ofsLog << "response sent" << std::endl;
                     Client *newClient = new Client(client->getFd(), client->getServerFd(), client->getDefaultSrv());
                     client->getDefaultSrv().removeClient(client->getFd());
@@ -157,9 +163,9 @@ void ServerManager::start() {
                     EvManager::addEvent(newClient->getFd(), EvManager::read, EvManager::client);
                     continue ;
                 }
-            } else if (client->isCgi() == true) {
-                client->checkCgi();
             }
+            else if (client->isCgi() == true)
+                client->checkCgi();
         }
         catch(ResponseError& e)
         {
@@ -174,8 +180,7 @@ void ServerManager::start() {
             std::cerr << e.what() << std::endl;
         }
     }
-};
-
+}
 
 void ServerManager::generateErrorResponse(const ResponseError& e, Client &client) {
     std::string response;
@@ -238,7 +243,7 @@ bool ServerManager::closeConnetcion(Client &client) {
     HTTPServer &srv = client.getDefaultSrv();
     srv.removeClient(fd);
     return (true);
-};
+}
 
 ServerManager::ServerManager(const char *configfile)
 {
@@ -248,9 +253,8 @@ ServerManager::ServerManager(const char *configfile)
 
 ServerManager::~ServerManager()
 {
-    for (size_t i = 0; i < this->size(); i++) {
+    for (size_t i = 0; i < this->size(); i++)
         delete (*this)[i];
-    }
 }
 
 
@@ -290,8 +294,6 @@ int ServerManager::used(HTTPServer &srv) const
 {
     for(size_t i = 0; i < this->size(); i++)
         if (std::strcmp((*this)[i]->getPort(), srv.getPort()) == 0)
-        {
             return (i);
-        }
     return (-1);
 }

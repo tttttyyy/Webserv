@@ -1,9 +1,6 @@
 #include "Location.hpp"
 
-Location::Location(std::string const &location)
-{
-	this->_location = location;
-}
+Location::Location(std::string const &location) : _location(location) {}
 
 Location &Location::operator=(Location const &rhs) {
 	if (this != &rhs) {
@@ -12,18 +9,20 @@ Location &Location::operator=(Location const &rhs) {
 		_nestedLocations = rhs._nestedLocations;
 	}
 	return (*this);
-};
+}
 
-// for inheritence from server block
-Location &Location::operator=(ServerCore const &rhs) {
-	if (this != &rhs) {
+// Purpuse: inheritence from server block
+Location &Location::operator=(ServerCore const &rhs)
+{
+	if (this != &rhs)
+	{
 		ServerCore::operator=(rhs);
 		error_page.clear();
 		_cgis.clear();
 		_redirections.clear();
 	}
 	return (*this);
-};
+}
 
 Location::~Location() {}
 

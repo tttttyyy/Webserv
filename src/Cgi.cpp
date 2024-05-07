@@ -49,7 +49,7 @@ int Cgi::execute(Client &client) {
     client.setCgiPID(pid);
     client.setCgiStartTime();
     return (pipe_from_child[0]);
-};
+}
 
 char **Cgi::initEnv(Client const &client)
 {
@@ -99,4 +99,4 @@ char **Cgi::initEnv(Client const &client)
 	envp[i] = NULL;
 
 	return envp;
-};
+}

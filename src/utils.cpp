@@ -1,7 +1,6 @@
 #include "DefaultSetup.hpp"
 #include "utils.hpp"
 
-
 std::string fileToString(std::string const &fileName) {
     std::ifstream file(fileName.c_str());
 	std::string fileContent;
@@ -21,7 +20,6 @@ std::string fileToString(std::string const &fileName) {
 bool readFromFd(int fd, std::string &str) {
     char buf[READ_BUFFER];
     int readSize = read(fd, buf, READ_BUFFER);
-    // std::cout << "readSize = " << readSize << std::endl;
     if (readSize == -1) {
         return (true);
     }
@@ -30,7 +28,7 @@ bool readFromFd(int fd, std::string &str) {
     }
     str.append(buf, readSize);
     return (false);
-};
+}
 
 // std::ofstream wofs("writeInFd.log");
 
@@ -42,7 +40,7 @@ int writeInFd(int fd, std::string &str) {
         str.erase(0, res);
     }
     return (res);
-};
+}
 
 long double	get_current_time(void)
 {
@@ -56,4 +54,4 @@ std::string my_to_string(size_t num) {
     std::stringstream str;
     str << num;
     return (str.str());
-};
+}

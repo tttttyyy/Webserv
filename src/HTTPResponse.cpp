@@ -27,12 +27,7 @@ void HTTPResponse::buildHeader()
 {
     for (std::map<std::string, std::string>::iterator it = _responseHeader.begin();
         it != _responseHeader.end(); ++it)
-    {
-        _header += it->first;
-        _header += ": ";
-        _header += it->second;
-        _header += "\r\n";
-    }
+        _header += it->first + ": " + it->second + "\r\n";
     _header += "\r\n";
 }
 

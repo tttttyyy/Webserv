@@ -9,10 +9,9 @@
 //getNPort chi ogtagorcvum
 // linux
 // website ashxatacnelu dzev
+//check comments
 int main(int ac, char **av)
 {
-    (void)ac;
-    (void)av;
     try
     {
         ServerManager mgn(ac == 2 ? av[1] : DFLT);
@@ -28,8 +27,3 @@ int main(int ac, char **av)
         std::cerr << e.what() << std::endl;
     }
 }
-
-// union ipcast{
-//     int[4] ip;
-
-// };

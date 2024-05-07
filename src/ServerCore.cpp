@@ -73,6 +73,7 @@ std::string ServerCore::getErrPage(int key) const
 		return (it->second);
 	return (nill);
 }
+
 void ServerCore::setSize(std::string const &bodySize)
 {
 	char *ptr;

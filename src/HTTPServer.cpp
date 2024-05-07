@@ -88,7 +88,6 @@ void HTTPServer::push(std::string const &prefix, Location const &locationDirecti
     this->_locations.insert(std::make_pair(prefix, locationDirective));
 }
 
-
 void HTTPServer::push__serverName(std::string const &srvName)
 {
     std::vector<std::string>::iterator it = std::find(_serverName.begin(), _serverName.end(), srvName);
@@ -122,7 +121,7 @@ void HTTPServer::push(sock_t clFd, Client *clt)
 void HTTPServer::push(HTTPServer *srv) {
     if (srv != NULL)
         _srvs.push_back(srv);
-};
+}
 
 HTTPServer *HTTPServer::getSubServerByName(std::string const &serverName) {
     for (size_t i = 0; i < _srvs.size(); ++i) {
@@ -133,7 +132,7 @@ HTTPServer *HTTPServer::getSubServerByName(std::string const &serverName) {
         }
     }
     return (NULL);
-};
+}
 
 bool HTTPServer::exist(sock_t fd) {return (_clnt.find(fd) != _clnt.end());}
 
@@ -185,7 +184,7 @@ InnerFd *HTTPServer:: getInnerFd(int fd) {
         ++it;
     }
     return (NULL);
-};
+}
 
 const Location* HTTPServer::findMatching(std::string const &realPath) const
 {
@@ -283,7 +282,7 @@ void HTTPServer::get(Client &client) {
     } else {
         throw ResponseError(404, "not found");
     }
-};
+}
 
 void HTTPServer::post(Client &client) {
     // client.addHeader(std::pair<std::string, std::string>("content-type", "text/html"));
@@ -293,7 +292,7 @@ void HTTPServer::post(Client &client) {
     } else {
         throw ResponseError(501, "Not Implemented");
     }
-};
+}
 
 void HTTPServer::del(Client &client) {
     if (std::remove(client.getPath().c_str()) == -1) {
@@ -303,7 +302,7 @@ void HTTPServer::del(Client &client) {
     client.addHeader(std::pair<std::string, std::string>("Content-Length", my_to_string(client.getResponseBody().size())));
     client.buildHeader();
     client.isResponseReady() = true;
-};
+}
 
 // void HTTPServer::head(Client &client) {
 //     std::cout << client.getMethod() << " " <<  client.getPath() << std::endl;
@@ -340,15 +339,13 @@ std::string	HTTPServer::directory_listing(const std::string &path, std::string d
 	
 	if (path != "." && path != ".." && path[0] != '/' && (path[0] != '.' && path[1] != '/') && (path[0] != '.' && path[1] != '.' && path[2] != '/')) {
         relPath = "./" + path + "/";
-    } else {
+    } else
 		relPath = path + "/";
-	}
 
 	opened_dir = opendir(relPath.c_str());
 	
-    if (opened_dir == NULL) {
+    if (opened_dir == NULL)
         throw std::logic_error (strerror(errno));
-    }
 
 	table += "<!DOCTYPE html><html><head><title>";
 	table += "Index of ";
@@ -396,4 +393,3 @@ std::string	HTTPServer::directory_listing(const std::string &path, std::string d
 	closedir(opened_dir);
     return table;
 }
-

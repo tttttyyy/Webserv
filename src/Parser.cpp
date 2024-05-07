@@ -50,7 +50,6 @@ std::string Parser::context_keyword(std::string const &context_token)
         if (std::isspace(context_token[i]))
             break;
     std::string lower = context_token;
-    
     return (context_token.substr(0, i));
 }
 
@@ -68,9 +67,7 @@ void Parser::clean()
             config += (line.size() > 0) ? HTTPRequest::trim(line) + '\a' : "";
         }
         else
-        {
             config += HTTPRequest::trim(line) + '\a';
-        }
     }
     if (config.empty())
         throw HTTPCoreException("Error: File is Empty");
@@ -131,10 +128,8 @@ void Parser::syntax_analysis( void )
         if (ch->type == WORD)
             throw HTTPCoreException(std::string("Config: Syntax error.").c_str());
         if (ch == tokens.begin())
-        {
             if (ch->type != CONTEXT)
                 throw HTTPCoreException(std::string("Config: Syntax error.").c_str());
-        }
     }
 }
 
@@ -215,11 +210,8 @@ void Parser::fill_servers(ServerManager &mgn)
 {
     std::list<Token>::iterator ch;
     for(ch = tokens.begin(); ch != tokens.end(); ch++)
-    {
-        if (ch->type == CONTEXT && context_keyword(ch->token) == "server") {
+        if (ch->type == CONTEXT && context_keyword(ch->token) == "server")
             create_server(mgn, ch);
-        }
-    }
 }
 
 void Parser::removeUnprintables(std::vector<std::string> &tmp_ctx)
@@ -242,9 +234,16 @@ void Parser::addToken(char s, p_type type)
 
 bool Parser::isWord(char s)
 {
-    if (s != '{' && s != '}' && s != ';' && s != '\a')
-        return (true);
-    return (false);
+    switch (s)
+    {
+        case '{':
+        case '}':
+        case ';':
+        case '\a':
+            return false;
+        default:
+            return true;
+    }
 }
 
 std::string Parser::remove_extraSpace(std::string const &d_val)
@@ -313,21 +312,19 @@ void Parser::create_server(ServerManager &mgn, std::list<Token>::iterator& ch)
         {
             if (next->type == DIRECTIVE)
                 s_directive(next, *srv);
-            if (next->type == CONTEXT && context_keyword(next->token) == "server") {
+            if (next->type == CONTEXT && context_keyword(next->token) == "server")
                 break;
-            }
             if (next->type == CONTEXT)
                 location(next, *srv);
             next++;
         }
         int srvIndex = mgn.used(*srv);
-        if (srvIndex == -1) {
+        if (srvIndex == -1)
             mgn.push_back(srv);
-        } else if (srv->get_serverNames().empty() == false) {
+        else if (srv->get_serverNames().empty() == false)
             mgn[srvIndex]->push(srv);
-        } else {
+        else
             throw HTTPCoreException("already used");
-        }
     }
     catch(const HTTPCoreException& e)
     {
@@ -363,7 +360,6 @@ void Parser::location(std::list<Token>::iterator& node, HTTPServer &srv)
     }
     srv.push(location_Components[1], loc);
 }
-
 
 void Parser::l_directive(std::list<Token>::iterator &node, Location &loc)
 {
@@ -409,16 +405,13 @@ void Parser::s_directive(std::list<Token>::iterator& node, HTTPServer &srv)
         node->token = HTTPRequest::trim(node->token);
         d_val = remove_extraSpace(node->token.substr(i+1));
     }
-    if (d_key.empty() || d_val.empty()) {
+    if (d_key.empty() || d_val.empty())
         throw HTTPCoreException("Directive Value: Value Can't be NULL");
-    }
     node->token[i] = ' ';
     
     FuncDir f = directives.find(d_key);
     if (f != directives.end())
-    {
         (this->*(f->second))(d_val, srv);
-    }
 }
 
 void Parser::d_listen(std::string &d_val, HTTPServer &srv)

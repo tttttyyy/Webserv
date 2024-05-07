@@ -63,7 +63,6 @@ Types::Types( void )
     MimeTypes[""] = "text/html";
 }
 
-
 Types &Types::GetInstance() {return (singleton_);}
 
 Types::~Types() {};

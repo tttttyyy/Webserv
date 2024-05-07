@@ -109,13 +109,12 @@ std::pair<EvManager::Flag, int> EvManager::listen() {
 
 #else
 
-
-bool EvManager::start() {
+bool EvManager::start()
+{
     if (_kq == 0) {
         _kq = kqueue();
-        if (_kq == -1) {
+        if (_kq == -1)
             throw std::runtime_error(std::string("kqueue: ") + strerror(errno));
-        }
     }
     return (true);
 }
@@ -200,8 +199,8 @@ std::pair<EvManager::Flag, int> EvManager::listen() {
     return (result);
 }
 
-
-int EvManager::getFlag(Flag flag) {
+int EvManager::getFlag(Flag flag)
+{
     switch (flag)
     {
     case read :
@@ -215,7 +214,6 @@ int EvManager::getFlag(Flag flag) {
     default :
         return (def);
     }
-    return (def);
-};
+}
 
 #endif
