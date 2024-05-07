@@ -1,0 +1,51 @@
+<html>
+<script type="text/javascript">
+  // function streamUpload() {
+  //   var blob = new Blob(['GmnQPBU+nyRGER4JPAW4DjDQC19D']);
+  //   var xhr = new XMLHttpRequest();
+  //   // Add any event handlers here...
+  //   xhr.open('POST', '/', true);
+  //   xhr.setRequestHeader("Transfer-Encoding", "chunked");
+  //   xhr.send(blob);
+  // }
+  async function uploadChunk(chunk, retries = 3) {
+    const formData = new FormData();
+    formData.append('file', chunk);
+
+    try {
+      await fetch('/upload-endpoint', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        }
+      });
+    } catch (error) {
+      if (retries > 0) {
+        await uploadChunk(chunk, retries - 1);
+      } else {
+        console.error('Failed to upload chunk: ', error);
+      }
+    }
+  }
+
+  function handleFileUpload(event) {
+    console.log('event2222222222222222', event);
+    const file = event.target.files[0];
+    const chunkSize = 10 * 10; // size of each chunk (1MB)
+    let start = 0;
+
+    while (start < file.size) {
+      uploadChunk(file.slice(start, start + chunkSize));
+      start += chunkSize;
+    }
+  }
+</script>
+
+<body>
+  <div id='demo'>Test Chunked Upload using XHR</div>
+  <input type="file" name="upload" id="" onchange="handleFileUpload(event)">
+  <button onclick="handleFileUpload()">Start Upload</button>
+</body>
+
+</html>

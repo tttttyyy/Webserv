@@ -1,0 +1,13 @@
+Accept = */*
+Accept-Encoding = gzip, deflate
+Accept-Language = en-US,en;q=0.9
+Connection = keep-alive
+Content-Length = 122855
+Content-Type = multipart/form-data; boundary=----WebKitFormBoundaryalyRZF5YPGfdI2p0
+Host = 127.0.0.1:8080
+Origin = http://127.0.0.1:8080
+Referer = http://127.0.0.1:8080/
+Sec-Fetch-Dest = empty
+Sec-Fetch-Mode = cors
+Sec-Fetch-Site = same-origin
+User-Agent = Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.4.1 Safari/605.1.15
